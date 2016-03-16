@@ -121,25 +121,15 @@
 	    var store = void 0,
 	        resolvedMiddleware = [];
 
-	    for (var _iterator = _middlewares, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-	      var _ref;
-
-	      if (_isArray) {
-	        if (_i >= _iterator.length) break;
-	        _ref = _iterator[_i++];
-	      } else {
-	        _i = _iterator.next();
-	        if (_i.done) break;
-	        _ref = _i.value;
-	      }
-
-	      var middleware = _ref;
-
-	      if (typeof middleware === 'string') {
-	        resolvedMiddleware.push($injector.get(middleware));
-	      } else {
-	        resolvedMiddleware.push(middleware);
-	      }
+	    // Am diverging from ng-redux so avoid polyfill requirement of for..of
+	    if (_middlewares) {
+	      _middlewares.forEach(function (middleware) {
+	        if (typeof middleware === 'string') {
+	          resolvedMiddleware.push($injector.get(middleware));
+	        } else {
+	          resolvedMiddleware.push(middleware);
+	        }
+	      });
 	    }
 
 	    var finalCreateStore = _storeEnhancers ? _redux.compose.apply(undefined, _storeEnhancers)(_redux.createStore) : _redux.createStore;

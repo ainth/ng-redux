@@ -28,7 +28,7 @@ module.exports = {
   plugins: [
     // Define free variables in the bundle
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': 'production',
+      'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     // Clear the ./build/ folder before each build
     new CleanPlugin(path.resolve(__dirname, 'dist')),

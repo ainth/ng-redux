@@ -37,12 +37,15 @@ export default function ngReduxProvider() {
   this.$get = ($injector) => {
     let store, resolvedMiddleware = [];
 
-    for(let middleware of _middlewares) {
-      if(typeof middleware === 'string') {
-        resolvedMiddleware.push($injector.get(middleware));
-      } else {
-        resolvedMiddleware.push(middleware);
-      }
+    // Am diverging from ng-redux so avoid polyfill requirement of for..of
+    if (_middlewares) {
+      _middlewares.forEach(function(middleware) {
+        if(typeof middleware === 'string') {
+          resolvedMiddleware.push($injector.get(middleware));
+        } else {
+          resolvedMiddleware.push(middleware);
+        }
+      });
     }
 
     let finalCreateStore = _storeEnhancers ? compose(..._storeEnhancers)(createStore) : createStore;
