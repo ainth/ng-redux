@@ -1,6 +1,6 @@
 import Connector from './connector';
 import invariant from 'invariant';
-import {createStore, applyMiddleware, compose} from 'redux';
+import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import digestMiddleware from './digestMiddleware';
 
 import assign from 'lodash.assign';
@@ -32,6 +32,8 @@ export default function ngReduxProvider() {
     _initialState = initialState;
   };
 
+  this.combineReducers = combineReducers;
+
   this.$get = ($injector) => {
     let store, resolvedMiddleware = [];
 
@@ -48,7 +50,7 @@ export default function ngReduxProvider() {
     //digestMiddleware needs to be the last one.
     resolvedMiddleware.push(digestMiddleware($injector.get('$rootScope')));
 
-    store = _initialState 
+    store = _initialState
       ? applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer, _initialState)
       : applyMiddleware(...resolvedMiddleware)(finalCreateStore)(_reducer);
 
